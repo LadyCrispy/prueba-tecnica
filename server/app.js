@@ -8,6 +8,8 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const cors = require("cors")
+
 
 
 mongoose
@@ -23,6 +25,23 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+
+
+
+
+//middleware cors
+const whitelist = ['http://localhost:5000']
+const corsOptions = {
+  origin: (origin, cb) => {
+    const originIsWhitelisted = whitelist.includes(origin);
+    cb(null, originIsWhitelisted)
+  },
+  // credentials: true
+}
+
+
+app.use(cors(corsOptions))
+
 
 // Middleware Setup
 app.use(logger('dev'));
@@ -53,6 +72,7 @@ app.locals.title = 'Express - Generated with IronGenerator';
 
 const index = require('./routes/index');
 app.use('/', index);
+
 
 
 module.exports = app;
